@@ -8,6 +8,7 @@
     <string name="auth_failed">Authentication failed. Please try again.</string>
     <string name="auth_cancelled">Sign in cancelled</string>
     <string name="auth_sign_in_success_message">Sign in successful!</string>
+    <string name="auth_network_unavailable">Network unavailable. Please sign in again.</string>
 
     <string name="google_client_id">663036451146-515f02gigc99jk6jnrc36nvs2qudpulu.apps.googleusercontent.com</string>
 </resources>
