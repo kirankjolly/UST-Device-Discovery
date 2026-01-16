@@ -2,32 +2,95 @@ package com.ust.discovery.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.ust.discovery.MainActivity
+import com.ust.discovery.R
 import com.ust.discovery.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val signInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        handleSignInResult(task)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        configureGoogleSignIn()
         setupUI()
     }
 
+    private fun configureGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
     private fun setupUI() {
-        // Temporary: Navigate to MainActivity on button click
         binding.btnGoogleSignIn.setOnClickListener {
-            navigateToHome()
+            signIn()
         }
+    }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        signInLauncher.launch(signInIntent)
+    }
+
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+
+            if (idToken != null) {
+                Log.d(TAG, "ID Token: $idToken")
+                Toast.makeText(this, getString(R.string.auth_sign_in_success_message), Toast.LENGTH_SHORT).show()
+                navigateToHome()
+            } else {
+                Log.e(TAG, "ID Token is null")
+                showError(getString(R.string.auth_failed))
+            }
+        } catch (e: ApiException) {
+            Log.e(TAG, "Sign in failed: ${e.statusCode}", e)
+            when (e.statusCode) {
+                GoogleSignInStatusCodes.SIGN_IN_CANCELLED -> showError(getString(R.string.auth_cancelled))
+                else -> showError(getString(R.string.auth_failed))
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     private fun navigateToHome() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        private const val TAG = "LoginActivity"
     }
 }
