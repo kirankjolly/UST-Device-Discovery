@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">USTDeviceDiscovery</string>
+    <string name="app_name_full">Device Discovery</string>
+    <string name="app_tagline">Discover and manage devices on your network</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="app_logo">App Logo</string>
 </resources>
