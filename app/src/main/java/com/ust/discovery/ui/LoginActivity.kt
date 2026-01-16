@@ -1,6 +1,8 @@
 package com.ust.discovery.ui
 
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,12 +17,14 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.ust.discovery.MainActivity
 import com.ust.discovery.R
+import com.ust.discovery.data.SessionManager
 import com.ust.discovery.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var sessionManager: SessionManager
 
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -34,7 +38,10 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
         configureGoogleSignIn()
+
+        checkExistingLogin()
         setupUI()
     }
 
@@ -58,6 +65,28 @@ class LoginActivity : AppCompatActivity() {
         signInLauncher.launch(signInIntent)
     }
 
+    private fun checkExistingLogin() {
+        if (sessionManager.isLoggedIn()) {
+            if (!isNetworkAvailable()) {
+                forceLogout()
+                return
+            }
+
+            attemptSilentSignIn()
+        }
+    }
+
+    private fun attemptSilentSignIn() {
+        val lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(this)
+        if (lastSignedInAccount != null) {
+            Log.d(TAG, "Silent sign-in successful")
+            navigateToHome()
+        } else {
+            Log.d(TAG, "Silent sign-in failed, clearing session")
+            sessionManager.clearSession()
+        }
+    }
+
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
             val account = task.getResult(ApiException::class.java)
@@ -65,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (idToken != null) {
                 Log.d(TAG, "ID Token: $idToken")
+                sessionManager.saveToken(idToken)
                 Toast.makeText(this, getString(R.string.auth_sign_in_success_message), Toast.LENGTH_SHORT).show()
                 navigateToHome()
             } else {
@@ -78,6 +108,20 @@ class LoginActivity : AppCompatActivity() {
                 else -> showError(getString(R.string.auth_failed))
             }
         }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun forceLogout() {
+        Log.d(TAG, "Network unavailable, forcing logout")
+        sessionManager.clearSession()
+        googleSignInClient.signOut()
+        Toast.makeText(this, getString(R.string.auth_network_unavailable), Toast.LENGTH_LONG).show()
     }
 
     private fun showError(message: String) {
