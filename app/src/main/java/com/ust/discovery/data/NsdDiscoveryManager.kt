@@ -5,17 +5,23 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import com.ust.discovery.domain.Device
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 
 class NsdDiscoveryManager(context: Context) {
 
     private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
+    private val deviceDao = AppDatabase.getDatabase(context).deviceDao()
     private val deviceSet = mutableSetOf<Device>()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _discoveredDevices = MutableStateFlow<List<Device>>(emptyList())
     val discoveredDevices: StateFlow<List<Device>> = _discoveredDevices.asStateFlow()
@@ -116,6 +122,15 @@ class NsdDiscoveryManager(context: Context) {
                         if (deviceSet.add(device)) {
                             Log.d(TAG, "Device resolved: $deviceName at $ipAddress:$port")
                             _discoveredDevices.value = deviceSet.toList()
+
+                            scope.launch {
+                                try {
+                                    deviceDao.insertDevice(device)
+                                    Log.d(TAG, "Device saved to database: $deviceName")
+                                } catch (e: Exception) {
+                                    Log.e(TAG, "Error saving device to database: $deviceName", e)
+                                }
+                            }
                         }
                     }
                 }
@@ -126,6 +141,12 @@ class NsdDiscoveryManager(context: Context) {
             nsdManager.resolveService(serviceInfo, resolveListener)
         } catch (e: Exception) {
             Log.e(TAG, "Error resolving service: ${serviceInfo.serviceName}", e)
+        }
+    }
+
+    fun cleanup() {
+        scope.launch {
+            deviceDao.markAllDevicesOffline()
         }
     }
 
