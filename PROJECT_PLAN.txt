@@ -123,6 +123,6 @@ Branch: feat/task-13/ux-stability
 
 
 Current Status:
-TASK-03 – Completed
-Branch: feat/task-03/google-oauth
+TASK-05 – Completed
+Branch: feat/task-05/mdns
 Last updated: 2026-01-16
