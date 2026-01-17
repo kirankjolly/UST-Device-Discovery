@@ -1,5 +1,6 @@
 package com.ust.discovery.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.ust.discovery.databinding.ActivityMainBinding
+import com.ust.discovery.ui.detail.DeviceDetailActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -36,9 +38,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         deviceAdapter = DeviceAdapter { device ->
-            // TODO: Navigate to device detail screen
+            navigateToDeviceDetail(device)
         }
         binding.devicesRecyclerView.adapter = deviceAdapter
+    }
+
+    private fun navigateToDeviceDetail(device: com.ust.discovery.domain.Device) {
+        val intent = Intent(this, DeviceDetailActivity::class.java)
+        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE, device)
+        startActivity(intent)
     }
 
     private fun observeDevices() {

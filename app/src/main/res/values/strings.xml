@@ -1,4 +1,7 @@
 <resources>
+    <string name="google_client_id">663036451146-515f02gigc99jk6jnrc36nvs2qudpulu.apps.googleusercontent.com</string>
+    <string name="db_name_device_discovery">device_discovery_database</string>
+
     <string name="app_name">USTDeviceDiscovery</string>
     <string name="app_name_full">Device Discovery</string>
     <string name="app_tagline">Discover and manage devices on your network</string>
@@ -11,7 +14,13 @@
     <string name="auth_network_unavailable">Network unavailable. Please sign in again.</string>
     <string name="no_devices_found">No devices found</string>
     <string name="discovered_devices">Discovered Devices</string>
-
-    <string name="google_client_id">663036451146-515f02gigc99jk6jnrc36nvs2qudpulu.apps.googleusercontent.com</string>
-    <string name="db_name_device_discovery">device_discovery_database</string>
+    <string name="device_information">Device Information</string>
+    <string name="device_name">Device Name</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port">Port</string>
+    <string name="service_type">Service Type</string>
+    <string name="status">Status</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="device_details">Device Details</string>
 </resources>
