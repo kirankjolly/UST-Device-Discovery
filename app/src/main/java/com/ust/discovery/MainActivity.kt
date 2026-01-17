@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        nsdDiscoveryManager.cleanup()
+    }
+
     companion object {
         private const val TAG = "MainActivity"
     }
