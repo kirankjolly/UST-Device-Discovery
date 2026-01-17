@@ -10,9 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
@@ -20,11 +17,14 @@ class NsdDiscoveryManager(context: Context) {
 
     private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
     private val deviceDao = AppDatabase.getDatabase(context).deviceDao()
-    private val deviceSet = mutableSetOf<Device>()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val _discoveredDevices = MutableStateFlow<List<Device>>(emptyList())
-    val discoveredDevices: StateFlow<List<Device>> = _discoveredDevices.asStateFlow()
+    val allDevices: Flow<List<Device>> = deviceDao.getAllDevices()
+
+    suspend fun initialize() {
+        deviceDao.markAllDevicesOffline()
+        Log.d(TAG, "All devices marked as offline on initialization")
+    }
 
     fun discoverDevices(): Flow<Device> = callbackFlow {
         val serviceTypes = listOf(
@@ -111,25 +111,25 @@ class NsdDiscoveryManager(context: Context) {
                     val serviceType = it.serviceType
 
                     if (ipAddress.isNotEmpty()) {
-                        val device = Device(
-                            name = deviceName,
-                            ipAddress = ipAddress,
-                            port = port,
-                            serviceType = serviceType,
-                            isOnline = true
-                        )
-
-                        if (deviceSet.add(device)) {
-                            Log.d(TAG, "Device resolved: $deviceName at $ipAddress:$port")
-                            _discoveredDevices.value = deviceSet.toList()
-
-                            scope.launch {
-                                try {
+                        scope.launch {
+                            try {
+                                val existingDevice = deviceDao.getDevice(deviceName, ipAddress)
+                                if (existingDevice != null) {
+                                    deviceDao.updateDeviceStatus(deviceName, ipAddress, true)
+                                    Log.d(TAG, "Device status updated to online: $deviceName at $ipAddress:$port")
+                                } else {
+                                    val device = Device(
+                                        name = deviceName,
+                                        ipAddress = ipAddress,
+                                        port = port,
+                                        serviceType = serviceType,
+                                        isOnline = true
+                                    )
                                     deviceDao.insertDevice(device)
-                                    Log.d(TAG, "Device saved to database: $deviceName")
-                                } catch (e: Exception) {
-                                    Log.e(TAG, "Error saving device to database: $deviceName", e)
+                                    Log.d(TAG, "New device discovered and saved: $deviceName at $ipAddress:$port")
                                 }
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error updating device status: $deviceName", e)
                             }
                         }
                     }
