@@ -1,4 +1,4 @@
-package com.ust.discovery.ui
+package com.ust.discovery.ui.login
 
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -15,10 +15,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.ust.discovery.MainActivity
 import com.ust.discovery.R
 import com.ust.discovery.data.SessionManager
 import com.ust.discovery.databinding.ActivityLoginBinding
+import com.ust.discovery.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
