@@ -1,10 +1,12 @@
 package com.ust.discovery.domain
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.Objects
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(
     tableName = "devices",
     indices = [Index(value = ["name", "ipAddress"], unique = true)]
@@ -17,4 +19,4 @@ data class Device(
     val port: Int = 0,
     val serviceType: String = "",
     val isOnline: Boolean = true
-)
+) : Parcelable
