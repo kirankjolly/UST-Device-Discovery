@@ -123,6 +123,6 @@ Branch: feat/task-13/ux-stability
 
 
 Current Status:
-TASK-06 – Done
-Branch: feat/task-06/room-db
+TASK-07 – Done
+Branch: feat/task-07/device-list
 Last updated: 2026-01-17
