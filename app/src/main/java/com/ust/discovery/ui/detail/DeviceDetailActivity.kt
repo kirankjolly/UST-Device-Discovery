@@ -6,9 +6,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.ust.discovery.R
+import com.ust.discovery.data.NetworkClient
 import com.ust.discovery.databinding.ActivityDeviceDetailBinding
 import com.ust.discovery.domain.Device
+import kotlinx.coroutines.launch
 
 class DeviceDetailActivity : AppCompatActivity() {
 
@@ -40,6 +43,7 @@ class DeviceDetailActivity : AppCompatActivity() {
 
         setupToolbar()
         displayDeviceInfo()
+        fetchPublicIp()
     }
 
     private fun setupToolbar() {
@@ -57,7 +61,19 @@ class DeviceDetailActivity : AppCompatActivity() {
         binding.deviceStatusText.text = if (device.isOnline) getString(R.string.online) else getString(R.string.offline)
     }
 
+    private fun fetchPublicIp() {
+        lifecycleScope.launch {
+            val result = NetworkClient.get(IPIFY_API_URL)
+            result.onSuccess { publicIp ->
+                binding.publicIpText.text = publicIp
+            }.onFailure { error ->
+                binding.publicIpText.text = getString(R.string.error_fetching_ip)
+            }
+        }
+    }
+
     companion object {
         const val EXTRA_DEVICE = "extra_device"
+        private const val IPIFY_API_URL = "https://api.ipify.org"
     }
 }

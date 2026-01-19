@@ -23,4 +23,7 @@
     <string name="online">Online</string>
     <string name="offline">Offline</string>
     <string name="device_details">Device Details</string>
+    <string name="public_ip">Public IP</string>
+    <string name="loading">Loading…</string>
+    <string name="error_fetching_ip">Error fetching IP</string>
 </resources>

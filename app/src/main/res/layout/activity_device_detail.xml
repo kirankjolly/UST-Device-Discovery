@@ -148,6 +148,23 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/public_ip"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:layout_marginTop="16dp" />
+
+                    <TextView
+                        android:id="@+id/publicIpText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:text="@string/loading"
+                        tools:text="203.0.113.45" />
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
