@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupRecyclerView()
+        setupSwipeRefresh()
         observeDevices()
     }
 
@@ -42,6 +43,12 @@ class MainActivity : AppCompatActivity() {
             navigateToDeviceDetail(device)
         }
         binding.devicesRecyclerView.adapter = deviceAdapter
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refreshDevices()
+        }
     }
 
     private fun navigateToDeviceDetail(device: com.ust.discovery.domain.Device) {
@@ -54,19 +61,21 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 viewModel.devices.collect { devices ->
+                    binding.swipeRefresh.isRefreshing = false
                     deviceAdapter.submitList(devices)
 
                     if (devices.isEmpty()) {
-                        binding.emptyStateText.visibility = View.VISIBLE
+                        binding.emptyStateLayout.visibility = View.VISIBLE
                         binding.devicesRecyclerView.visibility = View.GONE
                     } else {
-                        binding.emptyStateText.visibility = View.GONE
+                        binding.emptyStateLayout.visibility = View.GONE
                         binding.devicesRecyclerView.visibility = View.VISIBLE
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error observing devices", e)
-                binding.emptyStateText.visibility = View.VISIBLE
+                binding.swipeRefresh.isRefreshing = false
+                binding.emptyStateLayout.visibility = View.VISIBLE
                 binding.devicesRecyclerView.visibility = View.GONE
             }
         }

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ust.discovery.data.NsdDiscoveryManager
 import com.ust.discovery.domain.Device
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val nsdDiscoveryManager = NsdDiscoveryManager(application)
+    private var discoveryJob: Job? = null
 
     val devices: StateFlow<List<Device>> = nsdDiscoveryManager.allDevices
         .stateIn(
@@ -27,12 +29,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun startDiscovery() {
-        viewModelScope.launch {
+        discoveryJob?.cancel()
+        discoveryJob = viewModelScope.launch {
             try {
                 nsdDiscoveryManager.initialize()
                 nsdDiscoveryManager.discoverDevices().collect { }
             } catch (e: Exception) {
                 Log.e(TAG, "Error during device discovery", e)
+            }
+        }
+    }
+
+    fun refreshDevices() {
+        discoveryJob?.cancel()
+        discoveryJob = viewModelScope.launch {
+            try {
+                Log.d(TAG, "Refreshing devices")
+                nsdDiscoveryManager.initialize()
+                nsdDiscoveryManager.discoverDevices().collect { }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error refreshing devices", e)
             }
         }
     }

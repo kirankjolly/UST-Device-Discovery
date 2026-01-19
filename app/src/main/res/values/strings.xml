@@ -35,4 +35,5 @@
     <string name="timezone">Timezone</string>
     <string name="error_fetching_geo">Error fetching location</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="discovering_devices">Pull down to refresh</string>
 </resources>
