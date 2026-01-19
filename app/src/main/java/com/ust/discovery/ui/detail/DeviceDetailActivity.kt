@@ -66,10 +66,38 @@ class DeviceDetailActivity : AppCompatActivity() {
             val result = NetworkClient.get(IPIFY_API_URL)
             result.onSuccess { publicIp ->
                 binding.publicIpText.text = publicIp
+                fetchGeoInfo(publicIp)
             }.onFailure { error ->
                 binding.publicIpText.text = getString(R.string.error_fetching_ip)
+                displayGeoError()
             }
         }
+    }
+
+    private fun fetchGeoInfo(ip: String) {
+        lifecycleScope.launch {
+            val result = NetworkClient.getIpGeoInfo(ip)
+            result.onSuccess { geoInfo ->
+                binding.geoCity.text = geoInfo.city
+                binding.geoRegion.text = geoInfo.region
+                binding.geoCountry.text = geoInfo.country
+                binding.geoLocation.text = geoInfo.loc
+                binding.geoOrganization.text = geoInfo.org
+                binding.geoTimezone.text = geoInfo.timezone
+            }.onFailure { error ->
+                displayGeoError()
+            }
+        }
+    }
+
+    private fun displayGeoError() {
+        val errorText = getString(R.string.error_fetching_geo)
+        binding.geoCity.text = errorText
+        binding.geoRegion.text = errorText
+        binding.geoCountry.text = errorText
+        binding.geoLocation.text = errorText
+        binding.geoOrganization.text = errorText
+        binding.geoTimezone.text = errorText
     }
 
     companion object {
