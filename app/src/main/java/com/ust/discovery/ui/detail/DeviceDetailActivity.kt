@@ -72,7 +72,7 @@ class DeviceDetailActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val result = NetworkClient.get(IPIFY_API_URL)
+            val result = NetworkClient.get(getString(R.string.ipify_url))
             result.onSuccess { publicIp ->
                 binding.publicIpText.text = publicIp
                 fetchGeoInfo(publicIp)
@@ -85,7 +85,8 @@ class DeviceDetailActivity : AppCompatActivity() {
 
     private fun fetchGeoInfo(ip: String) {
         lifecycleScope.launch {
-            val result = NetworkClient.getIpGeoInfo(ip)
+            val geoUrl = getString(R.string.ipinfo_url, ip)
+            val result = NetworkClient.getIpGeoInfo(geoUrl)
             result.onSuccess { geoInfo ->
                 binding.geoCity.text = geoInfo.city
                 binding.geoRegion.text = geoInfo.region
@@ -111,6 +112,5 @@ class DeviceDetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DEVICE = "extra_device"
-        private const val IPIFY_API_URL = "https://api.ipify.org"
     }
 }

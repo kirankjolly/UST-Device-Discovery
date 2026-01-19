@@ -1,6 +1,8 @@
 <resources>
     <string name="google_client_id">663036451146-515f02gigc99jk6jnrc36nvs2qudpulu.apps.googleusercontent.com</string>
     <string name="db_name_device_discovery">device_discovery_database</string>
+    <string name="ipify_url">https://api.ipify.org</string>
+    <string name="ipinfo_url">https://ipinfo.io/%s/geo</string>
 
     <string name="app_name">USTDeviceDiscovery</string>
     <string name="app_name_full">Device Discovery</string>
