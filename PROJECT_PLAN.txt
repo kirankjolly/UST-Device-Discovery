@@ -1,0 +1,128 @@
+UST Android Assignment – Delivery Plan
+=====================================
+
+This document is used to track development work for the assignment.
+
+------------------------------------
+EPIC 1 – Project Foundation
+------------------------------------
+
+TASK-01: Initial Project Setup
+Branch: feat/task-01/initial-project-setup
+
+- Create Android Studio project (Empty Views Activity, Kotlin, XML)
+- Set up base package structure (ui, data, domain)
+- Enable ViewBinding
+- Initialize Git
+- Add assignment files to the repository
+
+Done when:
+- App launches
+- Default screen is visible
+- Initial commit is created
+
+------------------------------------
+EPIC 2 – Authentication
+------------------------------------
+
+TASK-02: Login Screen UI
+Branch: feat/task-02/login-ui
+
+- Create LoginActivity
+- XML layout with Google Sign-In button
+- Add basic branding and layout
+- Temporary navigation to home screen
+
+TASK-03: Google OAuth Integration
+Branch: feat/task-03/google-oauth
+
+- Create Google OAuth client
+- Implement Google Sign-In flow
+- Receive and validate ID token
+
+TASK-04: Token Caching & Silent Login
+Branch: feat/task-04/token-cache
+
+- Store token securely
+- Check for existing login on app start
+- Attempt silent sign-in
+- Force logout if network is unavailable
+
+------------------------------------
+EPIC 3 – Device Discovery (mDNS)
+------------------------------------
+
+TASK-05: mDNS Discovery
+Branch: feat/task-05/mdns
+
+- Use Android NSD for mDNS discovery
+- Detect devices on the local WiFi network
+- Read device name and IP address
+
+TASK-06: Local Database
+Branch: feat/task-06/room-db
+
+- Define Device entity
+- Create DAO
+- Save discovered devices
+
+TASK-07: Device List UI
+Branch: feat/task-07/device-list
+
+- Home screen UI
+- RecyclerView with device name and IP
+
+TASK-08: Device Status Update
+Branch: feat/task-08/device-status
+
+- Load devices from DB on launch
+- Run mDNS discovery
+- Update online/offline state
+
+------------------------------------
+EPIC 4 – Device Detail & Public IP
+------------------------------------
+
+TASK-09: Device Detail Screen
+Branch: feat/task-09/detail-screen
+
+- Navigate from list to detail screen
+- Pass selected device info
+
+TASK-10: Public IP API
+Branch: feat/task-10/ip-api
+
+- Call https://api.ipify.org
+- Parse response
+- No third-party libraries
+
+TASK-11: IP Geo API
+Branch: feat/task-11/ip-geo
+
+- Call https://ipinfo.io/<IP>/geo
+- Display location, company and carrier
+
+------------------------------------
+EPIC 5 – Polishing
+------------------------------------
+
+TASK-12: Error Handling
+Branch: feat/task-12/error-handling
+
+- Handle network failures
+- API errors
+- mDNS issues
+
+TASK-13: UX & Stability
+Branch: feat/task-13/ux-stability
+
+- Loading indicators
+- Empty states
+- Logout flow
+
+
+
+Current Status:
+TASK-13 – Done
+Branch: feat/task-13/ux-stability
+Last updated: 2026-01-19

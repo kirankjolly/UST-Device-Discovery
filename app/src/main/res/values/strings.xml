@@ -1,0 +1,45 @@
+<resources>
+    <string name="google_client_id">663036451146-515f02gigc99jk6jnrc36nvs2qudpulu.apps.googleusercontent.com</string>
+    <string name="db_name_device_discovery">device_discovery_database</string>
+    <string name="ipify_url">https://api.ipify.org</string>
+    <string name="ipinfo_url">https://ipinfo.io/%s/geo</string>
+
+    <string name="app_name">USTDeviceDiscovery</string>
+    <string name="app_name_full">Device Discovery</string>
+    <string name="app_tagline">Discover and manage devices on your network</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="app_logo">App Logo</string>
+
+    <string name="auth_failed">Authentication failed. Please try again.</string>
+    <string name="auth_cancelled">Sign in cancelled</string>
+    <string name="auth_sign_in_success_message">Sign in successful!</string>
+    <string name="auth_network_unavailable">Network unavailable. Please sign in again.</string>
+    <string name="no_devices_found">No devices found</string>
+    <string name="discovered_devices">Discovered Devices</string>
+    <string name="device_information">Device Information</string>
+    <string name="device_name">Device Name</string>
+    <string name="ip_address">IP Address</string>
+    <string name="port">Port</string>
+    <string name="service_type">Service Type</string>
+    <string name="status">Status</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="device_details">Device Details</string>
+    <string name="public_ip">Public IP</string>
+    <string name="loading">Loading…</string>
+    <string name="error_fetching_ip">Error fetching IP</string>
+    <string name="geographic_information">Geographic Information</string>
+    <string name="city">City</string>
+    <string name="region">Region</string>
+    <string name="country">Country</string>
+    <string name="location">Location (Lat, Lon)</string>
+    <string name="organization">Organization</string>
+    <string name="timezone">Timezone</string>
+    <string name="error_fetching_geo">Error fetching location</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="discovering_devices">Pull down to refresh</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout_success">Logged out successfully</string>
+</resources>
