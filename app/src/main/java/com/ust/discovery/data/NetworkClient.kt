@@ -46,9 +46,9 @@ object NetworkClient {
         }
     }
 
-    suspend fun getIpGeoInfo(ip: String): Result<IpGeoInfo> = withContext(Dispatchers.IO) {
+    suspend fun getIpGeoInfo(url: String): Result<IpGeoInfo> = withContext(Dispatchers.IO) {
         try {
-            val result = get("https://ipinfo.io/$ip/geo")
+            val result = get(url)
             result.fold(
                 onSuccess = { jsonString ->
                     val json = JSONObject(jsonString)
@@ -61,16 +61,16 @@ object NetworkClient {
                         org = json.optString("org", ""),
                         timezone = json.optString("timezone", "")
                     )
-                    Log.d(TAG, "Geo info parsed successfully for IP: $ip")
+                    Log.d(TAG, "Geo info parsed successfully")
                     Result.success(geoInfo)
                 },
                 onFailure = { error ->
-                    Log.e(TAG, "Failed to get geo info for IP: $ip", error)
+                    Log.e(TAG, "Failed to get geo info", error)
                     Result.failure(error)
                 }
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing geo info for IP: $ip", e)
+            Log.e(TAG, "Error parsing geo info", e)
             Result.failure(e)
         }
     }
