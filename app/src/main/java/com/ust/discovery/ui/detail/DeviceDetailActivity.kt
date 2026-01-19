@@ -2,6 +2,7 @@ package com.ust.discovery.ui.detail
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +12,7 @@ import com.ust.discovery.R
 import com.ust.discovery.data.NetworkClient
 import com.ust.discovery.databinding.ActivityDeviceDetailBinding
 import com.ust.discovery.domain.Device
+import com.ust.discovery.util.NetworkUtils
 import kotlinx.coroutines.launch
 
 class DeviceDetailActivity : AppCompatActivity() {
@@ -62,6 +64,13 @@ class DeviceDetailActivity : AppCompatActivity() {
     }
 
     private fun fetchPublicIp() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            binding.publicIpText.text = getString(R.string.no_internet_connection)
+            displayGeoError()
+            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
             val result = NetworkClient.get(IPIFY_API_URL)
             result.onSuccess { publicIp ->
