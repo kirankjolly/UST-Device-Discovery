@@ -123,6 +123,6 @@ Branch: feat/task-13/ux-stability
 
 
 Current Status:
-TASK-12 – Done
-Branch: feat/task-12/error-handling
+TASK-13 – Done
+Branch: feat/task-13/ux-stability
 Last updated: 2026-01-19

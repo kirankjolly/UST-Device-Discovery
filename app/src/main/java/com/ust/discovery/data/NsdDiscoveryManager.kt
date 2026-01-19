@@ -8,6 +8,7 @@ import com.ust.discovery.domain.Device
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -145,8 +146,10 @@ class NsdDiscoveryManager(context: Context) {
     }
 
     fun cleanup() {
-        scope.launch {
-            deviceDao.markAllDevicesOffline()
+        try {
+            scope.cancel()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error cancelling scope", e)
         }
     }
 
