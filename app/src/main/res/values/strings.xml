@@ -36,4 +36,8 @@
     <string name="error_fetching_geo">Error fetching location</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="discovering_devices">Pull down to refresh</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout_success">Logged out successfully</string>
 </resources>
