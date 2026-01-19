@@ -1,6 +1,7 @@
 package com.ust.discovery.ui.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.ust.discovery.data.NsdDiscoveryManager
@@ -27,13 +28,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun startDiscovery() {
         viewModelScope.launch {
-            nsdDiscoveryManager.initialize()
-            nsdDiscoveryManager.discoverDevices().collect { }
+            try {
+                nsdDiscoveryManager.initialize()
+                nsdDiscoveryManager.discoverDevices().collect { }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during device discovery", e)
+            }
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        nsdDiscoveryManager.cleanup()
+        try {
+            nsdDiscoveryManager.cleanup()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during cleanup", e)
+        }
+    }
+
+    companion object {
+        private const val TAG = "MainViewModel"
     }
 }

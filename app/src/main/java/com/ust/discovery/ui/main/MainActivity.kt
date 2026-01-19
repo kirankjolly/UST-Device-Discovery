@@ -2,6 +2,7 @@ package com.ust.discovery.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -51,17 +52,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeDevices() {
         lifecycleScope.launch {
-            viewModel.devices.collect { devices ->
-                deviceAdapter.submitList(devices)
+            try {
+                viewModel.devices.collect { devices ->
+                    deviceAdapter.submitList(devices)
 
-                if (devices.isEmpty()) {
-                    binding.emptyStateText.visibility = View.VISIBLE
-                    binding.devicesRecyclerView.visibility = View.GONE
-                } else {
-                    binding.emptyStateText.visibility = View.GONE
-                    binding.devicesRecyclerView.visibility = View.VISIBLE
+                    if (devices.isEmpty()) {
+                        binding.emptyStateText.visibility = View.VISIBLE
+                        binding.devicesRecyclerView.visibility = View.GONE
+                    } else {
+                        binding.emptyStateText.visibility = View.GONE
+                        binding.devicesRecyclerView.visibility = View.VISIBLE
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error observing devices", e)
+                binding.emptyStateText.visibility = View.VISIBLE
+                binding.devicesRecyclerView.visibility = View.GONE
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
